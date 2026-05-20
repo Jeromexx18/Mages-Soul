@@ -1,0 +1,97 @@
+[gd_scene load_steps=15 format=3 uid="uid://dq36c04k42e7b"]
+
+[ext_resource type="Script" uid="uid://dtnflw5wjqg4b" path="res://scenes/Enemies/knight_enemy.gd" id="1_6giww"]
+[ext_resource type="Texture2D" uid="uid://bcfbb6kii5q2w" path="res://Knight 2D Pixel Art/Sprites/without_outline/IDLE.png" id="1_nvwoc"]
+[ext_resource type="Script" uid="uid://bdsxkgj6kbrwh" path="res://scenes/Enemies/idle.gd" id="3_e7jfs"]
+[ext_resource type="Script" uid="uid://d3fb6ipfe3ylt" path="res://scenes/Enemies/attack.gd" id="4_6p3wl"]
+[ext_resource type="Script" uid="uid://bqq73x0lrjphr" path="res://scenes/Enemies/patrol.gd" id="5_r67oe"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ih08n"]
+atlas = ExtResource("1_nvwoc")
+region = Rect2(0, 0, 96, 84)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nivvn"]
+atlas = ExtResource("1_nvwoc")
+region = Rect2(96, 0, 96, 84)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_br6dp"]
+atlas = ExtResource("1_nvwoc")
+region = Rect2(192, 0, 96, 84)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gy1d8"]
+atlas = ExtResource("1_nvwoc")
+region = Rect2(288, 0, 96, 84)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_11dql"]
+atlas = ExtResource("1_nvwoc")
+region = Rect2(384, 0, 96, 84)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i02yo"]
+atlas = ExtResource("1_nvwoc")
+region = Rect2(480, 0, 96, 84)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u1mgj"]
+atlas = ExtResource("1_nvwoc")
+region = Rect2(576, 0, 96, 84)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ro2kr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ih08n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nivvn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_br6dp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gy1d8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_11dql")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i02yo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u1mgj")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 12.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q0eo5"]
+size = Vector2(21, 30)
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_layer = 3
+collision_mask = 0
+script = ExtResource("1_6giww")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(1, -2)
+sprite_frames = SubResource("SpriteFrames_ro2kr")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.3530363
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.5, 2)
+shape = SubResource("RectangleShape2D_q0eo5")
+
+[node name="State" type="Node" parent="."]
+
+[node name="idle" type="Node" parent="State"]
+unique_name_in_owner = true
+script = ExtResource("3_e7jfs")
+
+[node name="attack" type="Node" parent="State"]
+unique_name_in_owner = true
+script = ExtResource("4_6p3wl")
+
+[node name="Patrol" type="Node" parent="State"]
+unique_name_in_owner = true
+script = ExtResource("5_r67oe")
