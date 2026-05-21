@@ -5,16 +5,24 @@ var player:Player
 var next_state:PlayerState
 
 
-@onready var run: PlayerStateRun = %Run
-#@onready var fall: PlayerStateFall = %Fall
-@onready var fall: PlayerStateFall = %fall
-
-#@onready var crouch:PlayerStateCrouch=%Crouch
+#@onready var run: PlayerStateRun = %Run
+##@onready var fall: PlayerStateFall = %Fall
+#@onready var fall: PlayerStateFall = %fall
+#
+##@onready var crouch:PlayerStateCrouch=%Crouch
+#@onready var idle: PlayerStateIdle = %Idle
+#
+#@onready var jump: PlayerStateJump = %Jump
+#@onready var crouch: PlayerStateCrouch = %crouch
+#@onready var attack: PlayerStateAttack = %attack
+#@onready var dash: PlayerStateDash = %dash
 @onready var idle: PlayerStateIdle = %Idle
-
+@onready var run: PlayerStateRun = %Run
 @onready var jump: PlayerStateJump = %Jump
-@onready var crouch: PlayerStateCrouch = %crouch
-@onready var attack: PlayerStateAttack = %attack
+@onready var fall: PlayerStateFall = %Fall
+@onready var crouch: PlayerStateCrouch = %Crouch
+@onready var attack: PlayerStateAttack = %Attack
+@onready var dash: PlayerStateDash = %Dash
 
 
 

@@ -1,7 +1,10 @@
 class_name Player extends CharacterBody2D
 
-
+#@export_category()
 #region /// some standard variables
+
+@onready var sprite_2d: PlayerSprite = $Sprite2D #this is for the dashng
+
 @export var move_speed:int=200
 var direction:Vector2=Vector2.ZERO
 @export var gravity:float=900
@@ -23,6 +26,24 @@ var screen_size
 
 #endregion
 
+#signal damage_taken
+
+
+#abiliities
+#region 
+@export var dash_cooldown:float=0.0
+var dash_cooldown_timer:float=0.0
+
+@export var dash:bool=true
+var dash_count:int=0
+var can_magic:bool=false
+
+var can_double_jump:bool=false
+var can_take_damage:bool=false
+var special_ability:bool=false
+
+#endregion
+
 
 #region /// state machine variable
 var states: Array[PlayerState]
@@ -37,9 +58,7 @@ var previous_state:PlayerState:
 
 #region /// special abilities
 
-var can_double_jump:bool=false
-var can_dash:bool=false
-var special_ability:bool=false
+
 
 
 func _ready() -> void:
@@ -54,7 +73,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	pass
 
 func _process(_delta: float) -> void:
-
+	#sprite_2d.visible=false
 	#if Input.is_action_pressed("right"):
 		#velocity.x+=1
 	#if Input.is_action_pressed("left"):
@@ -63,7 +82,8 @@ func _process(_delta: float) -> void:
 		#velocity.y=+2
 	#if Input.is_action_pressed("jump"):
 		#velocity.y=4*gravity
-	
+	if dash_cooldown_timer>0:
+		dash_cooldown_timer -= _delta
 	
 	change_state (current_state.process(_delta))
 	update_direction()
@@ -74,7 +94,7 @@ func _physics_process(_delta: float) -> void:
 		velocity.y += gravity * gravity_multiplier* _delta
 		
 	#velocity increase when falling
-	velocity.x= move_speed*direction.x
+	#velocity.x= move_speed*direction.x
 	
 	velocity.y=clampf(velocity.y, -1000.0, max_fall_velocity)
 	
@@ -133,9 +153,11 @@ func change_state( new_state: PlayerState ):
 		current_state.exit()
 	#push state in front
 		states.push_front(new_state)
-		new_state.enter()
+		
 		#current_state.enter()
 		states.resize(4)
+		new_state.enter()
+		
 		%Label.text=current_state.name
 	pass
 
@@ -148,7 +170,16 @@ func update_direction()->void:
 	if prev_direction.x !=direction.y:
 		if direction.x<0:
 			animated_sprite_2d.flip_h=true
+			sprite_2d.flip_h=true
 		if direction.x>0:
+			sprite_2d.flip_h=false
 			animated_sprite_2d.flip_h=false
 	
 	pass
+
+
+func can_dash()->bool:
+	
+	if dash == false or dash_count >0 or dash_cooldown_timer>0 :
+		return false
+	return true

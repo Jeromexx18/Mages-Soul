@@ -5,10 +5,13 @@ func init() -> void:
 	pass
 	
 func enter():
+	if player.is_action_pressed("attack"):
+		return attack
 	#play animation here
 	pass
 	
 func exit():
+	player.animated_sprite_2d.play("attack_1")
 	pass
 	
 	
@@ -23,3 +26,5 @@ func process(_delta: float) -> PlayerState:
 func physics_process(_delta: float) -> PlayerState:
 	
 	return next_state
+func do_attack():
+	pass

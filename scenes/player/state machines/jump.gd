@@ -31,7 +31,9 @@ func process(_delta: float) -> PlayerState:
 	return next_state
 	
 func handle_input(event: InputEvent) ->PlayerState:
-	if event.is_action_released( "jump" ):
+	if event.is_action_pressed("dash") :
+		return dash
+	if event.is_action_released( "jump" ) and player.velocity.y<=0 and player.is_on_floor() :
 		player.velocity.y *= 0.5
 		return fall
 	return next_state

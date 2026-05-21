@@ -2,9 +2,11 @@ class_name EnemyState extends Node
 
 
 
-@onready var idle: EnemyState = %idle
-@onready var attack: EnemyState = %attack
-@onready var patrol: EnemyState = %Patrol
+@onready var idle: IdleState = %idle
+
+
+@onready var patrol: patrol = %Patrol
+@onready var attack: AttackState = %attack
 
 
 

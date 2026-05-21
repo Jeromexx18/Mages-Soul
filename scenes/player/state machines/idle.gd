@@ -6,6 +6,7 @@ func init() -> void:
 func enter():
 	#play animation
 	player.animated_sprite_2d.play("idle")
+	player.dash_count=0
 	pass
 	
 	
@@ -14,8 +15,12 @@ func exit():
 	
 func handle_input(_event: InputEvent) ->PlayerState:
 	#handle other inputs
+	if _event.is_action_pressed("dash")and player.can_dash():
+		return dash
+		
 	if _event.is_action_pressed("jump") and player.is_on_floor():
 		return jump
+	
 	return next_state
 	
 func process(_delta: float) -> PlayerState:

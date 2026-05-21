@@ -4,7 +4,7 @@ extends Area2D
 
 
 func _ready() -> void:
-	body_entered.connect( _on_body_entered )
+	#body_entered.connect( _on_body_entered )
 	
 	monitorable=true
 	monitoring=true

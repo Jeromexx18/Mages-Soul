@@ -1,4 +1,4 @@
-[gd_scene load_steps=131 format=3 uid="uid://cyi3pos4ewnph"]
+[gd_scene load_steps=133 format=3 uid="uid://cyi3pos4ewnph"]
 
 [ext_resource type="Script" uid="uid://cxd0s4bjovv3w" path="res://scenes/player/player.gd" id="1_75vfm"]
 [ext_resource type="Texture2D" uid="uid://xioltdvmly50" path="res://Battlemage Fantasy Character/Battlemage Complete (Sprite Sheet)/Attack 2/Battlemage Attack 2.png" id="2_fm80t"]
@@ -16,9 +16,11 @@
 [ext_resource type="Texture2D" uid="uid://dgcnlfp6qejwj" path="res://Battlemage Fantasy Character/Battlemage Complete (Sprite Sheet)/Spin Attack/Battlemage Spin Attack.png" id="8_uf5tr"]
 [ext_resource type="Script" uid="uid://b4v3pjrpintml" path="res://scenes/player/fall.gd" id="10_h17s1"]
 [ext_resource type="Texture2D" uid="uid://kitfvvl4plb3" path="res://Battlemage Fantasy Character/Battlemage Complete (Sprite Sheet)/Sustain Magic/Battlemage Sustain Magic.png" id="10_myrg7"]
+[ext_resource type="Script" uid="uid://c4tmjeuwa5u2l" path="res://scenes/player/state machines/dashsprite.gd" id="13_yj68g"]
 [ext_resource type="Script" uid="uid://q3ewkhh1kons" path="res://scenes/player/levelbounds.gd" id="15_fcs02"]
 [ext_resource type="Script" uid="uid://dwm2stce42fop" path="res://scenes/player/crouch.gd" id="17_uf5tr"]
 [ext_resource type="Script" uid="uid://cu1qdkt5785hg" path="res://scenes/player/attack.gd" id="18_lgqa7"]
+[ext_resource type="Script" uid="uid://bsiytj0c4cs3n" path="res://scenes/player/dash.gd" id="19_3j4b4"]
 [ext_resource type="Script" uid="uid://b4iw0fmbv75ri" path="res://scenes/player/attack_area_2d.gd" id="20_8ydkj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lgqa7"]
@@ -823,8 +825,11 @@ _data = {
 size = Vector2(21.5, 16)
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
+collision_layer = 0
 script = ExtResource("1_75vfm")
 jump_velocity = 500.0
+dash_cooldown = 0.5
+dash = false
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(4, 4)
@@ -832,15 +837,23 @@ zoom = Vector2(4, 4)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-1, -7)
 sprite_frames = SubResource("SpriteFrames_x7p2l")
-animation = &"attack_1"
+animation = &"dash"
 autoplay = "idle"
-frame_progress = 0.5156818
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-1, -7)
+texture = ExtResource("5_myrg7")
+vframes = 7
+frame = 1
+script = ExtResource("13_yj68g")
 
 [node name="CollisionStand2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(-1, 2)
 shape = SubResource("CapsuleShape2D_dovo2")
 
 [node name="CollisionCrouch2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(-1, 9)
 shape = SubResource("CapsuleShape2D_lgqa7")
 
@@ -858,17 +871,22 @@ script = ExtResource("7_0owmy")
 unique_name_in_owner = true
 script = ExtResource("8_qek5x")
 
-[node name="fall" type="Node" parent="States"]
+[node name="Fall" type="Node" parent="States"]
 unique_name_in_owner = true
 script = ExtResource("10_h17s1")
 
-[node name="crouch" type="Node" parent="States"]
+[node name="Crouch" type="Node" parent="States"]
 unique_name_in_owner = true
 script = ExtResource("17_uf5tr")
 
-[node name="attack" type="Node" parent="States"]
+[node name="Attack" type="Node" parent="States"]
 unique_name_in_owner = true
 script = ExtResource("18_lgqa7")
+
+[node name="Dash" type="Node" parent="States"]
+unique_name_in_owner = true
+script = ExtResource("19_3j4b4")
+speed = 700.0
 
 [node name="Label" type="Label" parent="."]
 unique_name_in_owner = true

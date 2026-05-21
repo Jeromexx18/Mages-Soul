@@ -16,12 +16,14 @@ func init() -> void:
 	pass
 
 func enter():
+	
+	var prev:PlayerState=player.previous_state
 	#play animation here
 	player.animated_sprite_2d.play("jump")
 	player.animated_sprite_2d.pause()
 
-	player.gravity_multiplier=fall_gravity_multiplier*player.gravity
-	if player.previous_state==jump:
+	player.gravity_multiplier=fall_gravity_multiplier
+	if prev==jump or prev == dash:
 		coyote_timer=0
 	else:
 		coyote_timer=coyote_time
@@ -30,15 +32,17 @@ func enter():
 	
 func exit():
 	gravity_variable = player.gravity_multiplier
-	player.gravity_multiplier=fall_gravity_multiplier
+	player.gravity_multiplier=1.0
 	buffer_timer=0
 	
 	pass
 
 
 func handle_input(event: InputEvent) ->PlayerState:
+	if event.is_action_pressed("dash") and player.can_dash():
+		return dash
+	
 	if event.is_action_pressed("jump") and player.is_on_floor():
-		
 		if coyote_timer>0:
 			return jump
 		else:
@@ -57,7 +61,7 @@ func physics_process(_delta: float) -> PlayerState:
 	if player.is_on_floor():
 		if buffer_timer > 0:
 			return jump
-		return idle
+		return idle 
 	
 	return next_state
 	

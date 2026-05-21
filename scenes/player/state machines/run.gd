@@ -19,7 +19,7 @@ func exit():
 	
 	
 func process(_delta: float) -> PlayerState:
-	if player.direction.x==0:
+	if player.direction.x == 0:
 		return idle
 	#elif  player.direction.y>0.5:
 		#return crouch
@@ -35,6 +35,9 @@ func physics_process(_delta: float) -> PlayerState:
 	
 	
 func handle_input(event: InputEvent) ->PlayerState:
+	if event.is_action_pressed("dash") and player.can_dash():
+		return dash
+	
 	if event.is_action_pressed( "jump" ):
 		return jump
 	return next_state

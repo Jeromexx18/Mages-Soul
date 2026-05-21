@@ -22,8 +22,10 @@ func exit():
 	
 func handle_input(_event: InputEvent) ->PlayerState:
 	#input from the player here 
-	if _event.is_action_pressed("jump") and player.is_on_floor():
-		return crouch
+	if _event.is_action_pressed("dash")and player.can_dash():
+		return dash
+	if _event.is_action_pressed("jump"):  
+		return jump
 		#do something
 	return next_state
 	
