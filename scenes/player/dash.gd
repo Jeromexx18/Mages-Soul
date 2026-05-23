@@ -29,6 +29,9 @@ func enter():
 	player.velocity.y=0.0
 	player.dash_count += 1
 	
+	var anim=player.animated_sprite_2d
+	player.sprite_2d.texture=anim.sprite_frames.get_frame_texture(anim.animation, anim.frame)
+	
 	player.sprite_2d.tween_color()
 	
 	pass
@@ -36,7 +39,7 @@ func enter():
 func exit():
 	player.gravity_multiplier=1.0
 	player.dash_cooldown_timer = player.dash_cooldown
-	player.sprite_2d.visible=false
+	
 	pass
 	
 	
@@ -45,11 +48,8 @@ func handle_input(_event: InputEvent) ->PlayerState:
 	return next_state
 	
 func process(_delta: float) -> PlayerState:
-	player.sprite_2d.visible=true
+	
 	time -=_delta
-	
-	
-	
 	if time<=0:
 		if player.is_on_floor():
 			return idle
@@ -57,12 +57,12 @@ func process(_delta: float) -> PlayerState:
 			return fall
 			
 	effect_time -= _delta
-	if effect_time <=0:
+	if effect_time <= 0:
 		effect_time = effect_duration
 		player.sprite_2d.ghost()
 	
 		
-	return null
+	return next_state
 
 func physics_process(_delta: float) -> PlayerState:
 	player.velocity.x =  speed  * direction 

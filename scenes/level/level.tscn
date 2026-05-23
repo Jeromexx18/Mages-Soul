@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://28xsllq7rcmt" path="res://Pixel Art Tiles and Backgrounds - Woods/Backgrounds/WOODS - Third.png" id="5_vpf64"]
 [ext_resource type="TileSet" uid="uid://pf5h3epcc6rd" path="res://Pixel Art Tiles and Backgrounds - Woods/woods and terrain.tres" id="5_wcngd"]
 [ext_resource type="PackedScene" uid="uid://cyi3pos4ewnph" path="res://scenes/player/player.tscn" id="6_wcngd"]
-[ext_resource type="PackedScene" uid="uid://dq36c04k42e7b" path="res://scenes/Enemies/Knight_enemy.tscn" id="8_xv074"]
+[ext_resource type="PackedScene" uid="uid://bphk5i0ibuehl" path="res://scenes/Enemies/enemy.tscn" id="8_xv074"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xv074"]
 texture = ExtResource("1_qkmgm")
@@ -2256,7 +2256,7 @@ tile_set = SubResource("TileSet_tf2q7")
 collision_enabled = false
 
 [node name="Player" parent="." instance=ExtResource("6_wcngd")]
-position = Vector2(252, 433)
+position = Vector2(170, 418)
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
 visible = false
@@ -2265,5 +2265,5 @@ energy = 0.83
 blend_mode = 2
 max_distance = 6762.0
 
-[node name="object" parent="." instance=ExtResource("8_xv074")]
-position = Vector2(303, 432)
+[node name="Enemy" parent="." instance=ExtResource("8_xv074")]
+position = Vector2(635, 412)

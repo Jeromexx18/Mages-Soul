@@ -3,7 +3,7 @@ class_name Player extends CharacterBody2D
 #@export_category()
 #region /// some standard variables
 
-@onready var sprite_2d: PlayerSprite = $Sprite2D #this is for the dashng
+ #this is for the dashng
 
 @export var move_speed:int=200
 var direction:Vector2=Vector2.ZERO
@@ -15,6 +15,9 @@ var screen_size
 #@export var velocity=Vector2.ZERO
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @export var gravity_multiplier:float=1.0
+@onready var attack_area: AttackArea = %AttackArea
+
+
 #endregion
 
 #region /// standing and croutch collisions
@@ -27,7 +30,10 @@ var screen_size
 #endregion
 
 #signal damage_taken
+#region /// for dash
+@onready var sprite_2d: PlayerSprite = $Sprite2D
 
+#endregion
 
 #abiliities
 #region 
@@ -64,6 +70,7 @@ var previous_state:PlayerState:
 func _ready() -> void:
 	#if get_tree().get_first_node_in_group("Player")!=self:
 		#self.queue_free()
+	add_to_group("Player")
 	initialize_states()
 	
 	pass
@@ -73,7 +80,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	pass
 
 func _process(_delta: float) -> void:
-	#sprite_2d.visible=false
+	
 	#if Input.is_action_pressed("right"):
 		#velocity.x+=1
 	#if Input.is_action_pressed("left"):
@@ -168,6 +175,7 @@ func update_direction()->void:
 	var y_axis=Input.get_axis("jump","down")
 	direction=Vector2(x_axis,y_axis)
 	if prev_direction.x !=direction.y:
+		attack_area.flip( direction.x )
 		if direction.x<0:
 			animated_sprite_2d.flip_h=true
 			sprite_2d.flip_h=true

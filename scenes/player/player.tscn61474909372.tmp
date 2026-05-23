@@ -1,4 +1,4 @@
-[gd_scene load_steps=135 format=3 uid="uid://cyi3pos4ewnph"]
+[gd_scene load_steps=134 format=3 uid="uid://cyi3pos4ewnph"]
 
 [ext_resource type="Script" uid="uid://cxd0s4bjovv3w" path="res://scenes/player/player.gd" id="1_75vfm"]
 [ext_resource type="Texture2D" uid="uid://xioltdvmly50" path="res://Battlemage Fantasy Character/Battlemage Complete (Sprite Sheet)/Attack 2/Battlemage Attack 2.png" id="2_fm80t"]
@@ -22,7 +22,6 @@
 [ext_resource type="Script" uid="uid://cu1qdkt5785hg" path="res://scenes/player/attack.gd" id="18_lgqa7"]
 [ext_resource type="Script" uid="uid://bsiytj0c4cs3n" path="res://scenes/player/dash.gd" id="19_3j4b4"]
 [ext_resource type="Script" uid="uid://b4iw0fmbv75ri" path="res://scenes/player/attack_area_2d.gd" id="20_8ydkj"]
-[ext_resource type="Script" uid="uid://cwwcw7kqyhf25" path="res://scenes/player/state machines/damage_area.gd" id="23_ioxgp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lgqa7"]
 atlas = ExtResource("2_fm80t")
@@ -921,7 +920,6 @@ shape = SubResource("RectangleShape2D_lgqa7")
 debug_color = Color(0.9529412, 0, 0.06666667, 0.41960785)
 
 [node name="DamageArea" type="Area2D" parent="."]
-script = ExtResource("23_ioxgp")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageArea"]
 position = Vector2(7, 2)

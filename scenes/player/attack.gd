@@ -6,7 +6,8 @@ func init() -> void:
 	
 func enter():
 	if player.is_action_pressed("attack"):
-		return attack
+		%AttackArea.activate
+		return
 	#play animation here
 	pass
 	

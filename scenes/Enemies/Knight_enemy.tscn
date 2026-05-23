@@ -1,12 +1,14 @@
-[gd_scene load_steps=50 format=3 uid="uid://dq36c04k42e7b"]
+[gd_scene load_steps=55 format=3 uid="uid://dq36c04k42e7b"]
 
-[ext_resource type="Script" uid="uid://dtnflw5wjqg4b" path="res://scenes/Enemies/knight_enemy.gd" id="1_6giww"]
 [ext_resource type="Texture2D" uid="uid://bcfbb6kii5q2w" path="res://Knight 2D Pixel Art/Sprites/without_outline/IDLE.png" id="1_nvwoc"]
 [ext_resource type="Texture2D" uid="uid://51ccd385wump" path="res://Knight 2D Pixel Art/Sprites/without_outline/ATTACK 1.png" id="2_awn1h"]
 [ext_resource type="Texture2D" uid="uid://kb8hwib1br0d" path="res://Knight 2D Pixel Art/Sprites/without_outline/ATTACK 3.png" id="3_bq88q"]
 [ext_resource type="Texture2D" uid="uid://bcrbtgdy8fcbc" path="res://Knight 2D Pixel Art/Sprites/without_outline/RUN.png" id="3_fdpks"]
 [ext_resource type="Texture2D" uid="uid://dbtdh0aojn58g" path="res://Knight 2D Pixel Art/Sprites/without_outline/HURT.png" id="4_bq88q"]
 [ext_resource type="Texture2D" uid="uid://bou66hrcb5cud" path="res://Knight 2D Pixel Art/Sprites/without_outline/WALK.png" id="6_kol76"]
+[ext_resource type="Script" uid="uid://baklkd7muy7et" path="res://scenes/Enemies/state_machin_controller.gd" id="7_awn1h"]
+[ext_resource type="Script" uid="uid://3iej3b8gwelg" path="res://scenes/Enemies/enemy state machine/node_finite_State_Machine.gd" id="8_awn1h"]
+[ext_resource type="Script" uid="uid://dpsb4apmfqfwx" path="res://scenes/Enemies/attack_state.gd" id="9_fdpks"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gsfdd"]
 atlas = ExtResource("2_awn1h")
@@ -185,7 +187,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_j16wn")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack_1",
 "speed": 12.0
 }, {
@@ -314,34 +316,103 @@ animations = [{
 "speed": 12.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_q0eo5"]
-size = Vector2(21, 30)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2om8q"]
+radius = 7.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_8lo41"]
-radius = 63.03174
+[sub_resource type="GDScript" id="GDScript_r67oe"]
+script/source = "extends Node
 
-[node name="Enemy" type="CharacterBody2D"]
+@export var character_body_2d : CharacterBody2D
+@onready var animated_sprite_2d: AnimatedSprite2D = $\"../AnimatedSprite2D\"
+
+const gravity : int = 900
+
+func _physics_process(delta: float) -> void:
+	
+	if !character_body_2d.is_on_floor():
+		character_body_2d.velocity.y = gravity * delta
+	
+	
+	pass
+"
+
+[sub_resource type="GDScript" id="GDScript_2om8q"]
+script/source = "extends NodeState
+
+@onready var character_body_2d : CharacterBody2D = get_parent().get_parent() as CharacterBody2D
+@export var animated_sprite_2d: AnimatedSprite2D
+@export var slow_down_speed : int = 50
+
+func on_process(_delta : float):
+	pass
+
+
+func on_physics_process(_delta : float):
+	character_body_2d.velocity.x = move_toward(character_body_2d.velocity.x, 0, slow_down_speed * _delta)
+	animated_sprite_2d.play(\"idle\")
+	#character_body_2d.move_and_slide()
+
+
+
+func enter():
+	pass
+
+
+func exit():
+	pass
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bq88q"]
+radius = 23.345236
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_awn1h"]
+
+[node name="EnemyKnight" type="CharacterBody2D"]
 collision_layer = 3
-collision_mask = 0
-script = ExtResource("1_6giww")
+collision_mask = 3
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(1, -2)
 sprite_frames = SubResource("SpriteFrames_ro2kr")
-animation = &"attack_2"
+animation = &"attack_1"
 autoplay = "idle"
 frame = 5
-frame_progress = 0.28465343
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0.5, 2)
-shape = SubResource("RectangleShape2D_q0eo5")
+position = Vector2(2, 2)
+shape = SubResource("CapsuleShape2D_2om8q")
 
-[node name="Detectradius" type="Area2D" parent="."]
-collision_layer = 2
+[node name="Gravity" type="Node" parent="." node_paths=PackedStringArray("character_body_2d")]
+script = SubResource("GDScript_r67oe")
+character_body_2d = NodePath("..")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Detectradius"]
-position = Vector2(2, 0)
-shape = SubResource("CircleShape2D_8lo41")
+[node name="StateMachinController" type="Node" parent="." node_paths=PackedStringArray("node_finite_state_machine")]
+script = ExtResource("7_awn1h")
+node_finite_state_machine = NodePath("../StateMachine")
 
-[connection signal="area_entered" from="Detectradius" to="." method="_on_area_2d_area_entered"]
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_node_state")]
+script = ExtResource("8_awn1h")
+initial_node_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine" node_paths=PackedStringArray("animated_sprite_2d")]
+script = SubResource("GDScript_2om8q")
+animated_sprite_2d = NodePath("../../AnimatedSprite2D")
+
+[node name="Attack" type="Node" parent="StateMachine" node_paths=PackedStringArray("animated_sprite_2d")]
+script = ExtResource("9_fdpks")
+animated_sprite_2d = NodePath("../../AnimatedSprite2D")
+
+[node name="AttackArea2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea2D"]
+shape = SubResource("CircleShape2D_bq88q")
+debug_color = Color(0.8493505, 0.36316842, 0.24835113, 0.41960785)
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_awn1h")
+
+[connection signal="body_entered" from="AttackArea2D" to="StateMachinController" method="_on_attack_area_2d_body_entered"]
+[connection signal="body_exited" from="AttackArea2D" to="StateMachinController" method="_on_attack_area_2d_body_exited"]

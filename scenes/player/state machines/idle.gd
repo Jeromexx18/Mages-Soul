@@ -5,6 +5,7 @@ func init() -> void:
 
 func enter():
 	#play animation
+	player.sprite_2d.visible = false
 	player.animated_sprite_2d.play("idle")
 	player.dash_count=0
 	pass

@@ -22,7 +22,7 @@ window/size/viewport_height=720
 
 [global_group]
 
-player=""
+Player=""
 
 [input]
 
@@ -62,6 +62,7 @@ down={
 2d_physics/layer_1="GROUND"
 2d_physics/layer_2="PLAYER"
 2d_physics/layer_5="ENEMIES"
+2d_physics/layer_6="BREKABLE"
 
 [rendering]
 
