@@ -5,8 +5,9 @@ var tween:Tween
 
 var sprite_2d_visible = true
 
+
 func _ready() -> void:
-	
+	self.visible = false
 	pass
 	
 func tween_color(duration:float=0.5, color:Color= Color(0.0, 3.5, 0.95)):
@@ -18,11 +19,11 @@ func tween_color(duration:float=0.5, color:Color= Color(0.0, 3.5, 0.95)):
 	
 	pass
 
-func ghost()->void:
-	sprite_2d_visible = true
+func _ghost()->void:
+	self.visible = true
 	
 	
-	var anim:AnimatedSprite2D=get_parent().animated_sprite_2d
+	var anim:AnimatedSprite2D=get_parent() as AnimatedSprite2D
 	var frame_texture = anim.sprite_frames.get_frame_texture(anim.animation, anim.frame)
 	if frame_texture == null:
 		return

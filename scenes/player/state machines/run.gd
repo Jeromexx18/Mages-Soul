@@ -9,6 +9,7 @@ func init() -> void:
 func enter():
 	#play animations
 	player.animated_sprite_2d.play("run")
+	player.dash_count =0
 	pass
 	
 	

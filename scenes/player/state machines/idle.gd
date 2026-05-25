@@ -5,9 +5,10 @@ func init() -> void:
 
 func enter():
 	#play animation
-	player.sprite_2d.visible = false
+	
 	player.animated_sprite_2d.play("idle")
 	player.dash_count=0
+	player.dash_effect.emitting = false
 	pass
 	
 	
@@ -18,6 +19,8 @@ func handle_input(_event: InputEvent) ->PlayerState:
 	#handle other inputs
 	if _event.is_action_pressed("dash")and player.can_dash():
 		return dash
+	if _event.is_action("attack"):
+		return attack
 		
 	if _event.is_action_pressed("jump") and player.is_on_floor():
 		return jump

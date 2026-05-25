@@ -2,20 +2,25 @@ class_name Player extends CharacterBody2D
 
 #@export_category()
 #region /// some standard variables
+@onready var dash_effect: GPUParticles2D = %dash_effect
+
+
 
  #this is for the dashng
 
 @export var move_speed:int=200
 var direction:Vector2=Vector2.ZERO
-@export var gravity:float=900
+@export var gravity:float=1000
 var screen_size
 @export var max_fall_velocity:float=500
 
-@export var jump_velocity:float=600
+@export var jump_velocity:float=100
 #@export var velocity=Vector2.ZERO
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @export var gravity_multiplier:float=1.0
 @onready var attack_area: AttackArea = %AttackArea
+
+
 
 
 #endregion
@@ -31,7 +36,7 @@ var screen_size
 
 #signal damage_taken
 #region /// for dash
-@onready var sprite_2d: PlayerSprite = $Sprite2D
+@onready var sprite_2d: PlayerSprite = $AnimatedSprite2D / Sprite2D
 
 #endregion
 
@@ -47,7 +52,7 @@ var can_magic:bool=false
 var can_double_jump:bool=false
 var can_take_damage:bool=false
 var special_ability:bool=false
-
+var can_attack : bool = true
 #endregion
 
 
@@ -173,21 +178,29 @@ func update_direction()->void:
 	var prev_direction=direction
 	var x_axis=Input.get_axis("left","right")
 	var y_axis=Input.get_axis("jump","down")
+	
 	direction=Vector2(x_axis,y_axis)
 	if prev_direction.x !=direction.y:
 		attack_area.flip( direction.x )
+		
 		if direction.x<0:
 			animated_sprite_2d.flip_h=true
 			sprite_2d.flip_h=true
+			dash_effect.scale.x = -1
+			
 		if direction.x>0:
 			sprite_2d.flip_h=false
 			animated_sprite_2d.flip_h=false
+			dash_effect.scale.x = 1
 	
 	pass
 
 
+
 func can_dash()->bool:
-	
-	if dash == false or dash_count >0 or dash_cooldown_timer>0 :
+	if dash == false or dash_count > 0 or dash_cooldown_timer>0 or dash_effect.emitting == true:
+		return false
+		
+	if not is_on_floor() and dash_count > 0:
 		return false
 	return true

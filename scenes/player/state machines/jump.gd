@@ -12,7 +12,7 @@ func enter():
 	#play animation here
 	player.animated_sprite_2d.play("jump")
 	player.animated_sprite_2d.pause()
-	player.velocity.y= -player.jump_velocity
+	player.velocity.y = -player.jump_velocity
 	
 	if player.previous_state==fall and not Input.is_action_just_pressed("jump"):
 		await get_tree().physics_frame
@@ -31,8 +31,11 @@ func process(_delta: float) -> PlayerState:
 	return next_state
 	
 func handle_input(event: InputEvent) ->PlayerState:
-	if event.is_action_pressed("dash") :
+	if event.is_action_pressed("dash") and player.can_dash() :
 		return dash
+		
+	if event.is_action("attack"):
+		return attack
 	if event.is_action_released( "jump" ) and player.velocity.y<=0 and player.is_on_floor() :
 		player.velocity.y *= 0.5
 		return fall

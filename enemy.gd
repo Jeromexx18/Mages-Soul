@@ -97,15 +97,13 @@ func _on_follow_area_2d_body_exited(body: Node2D) -> void:
 
 
 func _on_attack_area_2d_body_entered(body: Node2D) -> void:
+
 	if body.is_in_group("Player"):
 		attack_index = 0
 		attack_timer = attack_duration
 		in_cooldown = false
 		animated_sprite_2d.play(attacks[attack_index])
 		current_state = State.ATTACK
-		
-		
-		
 		
 		current_state = State.ATTACK
 	pass # Replace with function body.

@@ -1,6 +1,7 @@
-[gd_scene load_steps=135 format=3 uid="uid://cyi3pos4ewnph"]
+[gd_scene load_steps=146 format=3 uid="uid://cyi3pos4ewnph"]
 
 [ext_resource type="Script" uid="uid://cxd0s4bjovv3w" path="res://scenes/player/player.gd" id="1_75vfm"]
+[ext_resource type="Texture2D" uid="uid://cfsku3nvdyj2p" path="res://Battlemage Fantasy Character/Battlemage (Separeted Frames)/Dash/Battlemage Dash2.png" id="2_cnsyf"]
 [ext_resource type="Texture2D" uid="uid://xioltdvmly50" path="res://Battlemage Fantasy Character/Battlemage Complete (Sprite Sheet)/Attack 2/Battlemage Attack 2.png" id="2_fm80t"]
 [ext_resource type="Texture2D" uid="uid://f7y62mww4oda" path="res://Battlemage Fantasy Character/Battlemage Complete (Sprite Sheet)/Attack 3/Battlemage Attack 3.png" id="3_gx1jg"]
 [ext_resource type="Texture2D" uid="uid://rpdb2e6ltk4h" path="res://Battlemage Fantasy Character/Battlemage Complete (Sprite Sheet)/Crouch/Battlemage Crouch.png" id="4_fcs02"]
@@ -16,13 +17,59 @@
 [ext_resource type="Texture2D" uid="uid://dgcnlfp6qejwj" path="res://Battlemage Fantasy Character/Battlemage Complete (Sprite Sheet)/Spin Attack/Battlemage Spin Attack.png" id="8_uf5tr"]
 [ext_resource type="Script" uid="uid://b4v3pjrpintml" path="res://scenes/player/fall.gd" id="10_h17s1"]
 [ext_resource type="Texture2D" uid="uid://kitfvvl4plb3" path="res://Battlemage Fantasy Character/Battlemage Complete (Sprite Sheet)/Sustain Magic/Battlemage Sustain Magic.png" id="10_myrg7"]
-[ext_resource type="Script" uid="uid://c4tmjeuwa5u2l" path="res://scenes/player/state machines/dashsprite.gd" id="13_yj68g"]
+[ext_resource type="Texture2D" uid="uid://bsg8iujx4h55f" path="res://Battlemage Fantasy Character/Battlemage Complete (Sprite Sheet)/Jump Attack/Jump Foward Attack.png" id="12_j4nxn"]
+[ext_resource type="Script" uid="uid://c4tmjeuwa5u2l" path="res://scenes/player/state machines/player_sprite.gd" id="13_yj68g"]
 [ext_resource type="Script" uid="uid://q3ewkhh1kons" path="res://scenes/player/levelbounds.gd" id="15_fcs02"]
 [ext_resource type="Script" uid="uid://dwm2stce42fop" path="res://scenes/player/crouch.gd" id="17_uf5tr"]
 [ext_resource type="Script" uid="uid://cu1qdkt5785hg" path="res://scenes/player/attack.gd" id="18_lgqa7"]
 [ext_resource type="Script" uid="uid://bsiytj0c4cs3n" path="res://scenes/player/dash.gd" id="19_3j4b4"]
 [ext_resource type="Script" uid="uid://b4iw0fmbv75ri" path="res://scenes/player/attack_area_2d.gd" id="20_8ydkj"]
 [ext_resource type="Script" uid="uid://cwwcw7kqyhf25" path="res://scenes/player/state machines/damage_area.gd" id="23_ioxgp"]
+
+[sub_resource type="Shader" id="Shader_007i1"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.5.1.stable's CanvasItemMaterial.
+
+shader_type canvas_item;
+render_mode blend_mix;
+uniform int particles_anim_h_frames;
+uniform int particles_anim_v_frames;
+uniform bool particles_anim_loop;
+
+void vertex() {
+	float h_frames = float(particles_anim_h_frames);
+	float v_frames = float(particles_anim_v_frames);
+	VERTEX.xy /= vec2(h_frames, v_frames);
+	float particle_total_frames = float(particles_anim_h_frames * particles_anim_v_frames);
+	float particle_frame = floor(INSTANCE_CUSTOM.z * float(particle_total_frames));
+	if (!particles_anim_loop) {
+		particle_frame = clamp(particle_frame, 0.0, particle_total_frames - 1.0);
+	} else {
+		particle_frame = mod(particle_frame, particle_total_frames);
+	}	vec2 scale_uv =UV /= vec2(h_frames, v_frames);
+	UV =scale_uv + vec2(mod(particle_frame, h_frames) / h_frames, 
+	floor((particle_frame + 0.5) / h_frames) / v_frames);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6cv16"]
+shader = SubResource("Shader_007i1")
+shader_parameter/particles_anim_h_frames = 1
+shader_parameter/particles_anim_v_frames = 1
+shader_parameter/particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_j4nxn"]
+_data = [Vector2(0.008547023, 0.50561804), 0.0, 0.0, 0, 0, Vector2(0.78632486, 0.1685394), 0.14606738, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_28m0y"]
+curve = SubResource("Curve_j4nxn")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_uniwh"]
+gravity = Vector3(0, 0, 0)
+color = Color(0.99215686, 0.3647059, 0.9882353, 1)
+alpha_curve = SubResource("CurveTexture_28m0y")
+anim_speed_min = 1.0
+anim_speed_max = 1.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lgqa7"]
 atlas = ExtResource("2_fm80t")
@@ -304,6 +351,22 @@ region = Rect2(0, 480, 56, 48)
 atlas = ExtResource("6_myrg7")
 region = Rect2(0, 528, 56, 48)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_wvv85"]
+atlas = ExtResource("12_j4nxn")
+region = Rect2(0, 48, 56, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hxu4r"]
+atlas = ExtResource("12_j4nxn")
+region = Rect2(0, 96, 56, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i6dto"]
+atlas = ExtResource("12_j4nxn")
+region = Rect2(0, 144, 56, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4d8j4"]
+atlas = ExtResource("12_j4nxn")
+region = Rect2(0, 192, 56, 48)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_a38bk"]
 atlas = ExtResource("7_kvlxm")
 region = Rect2(0, 0, 56, 48)
@@ -456,7 +519,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_007i1")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack_1",
 "speed": 12.0
 }, {
@@ -686,6 +749,23 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_wvv85")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hxu4r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i6dto")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4d8j4")
+}],
+"loop": false,
+"name": &"jump_attack",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_a38bk")
 }, {
 "duration": 1.0,
@@ -835,18 +915,31 @@ dash_cooldown = 0.5
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(4, 4)
 
+[node name="dash_effect" type="GPUParticles2D" parent="."]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_6cv16")
+position = Vector2(-1, -6)
+amount = 6
+texture = ExtResource("2_cnsyf")
+lifetime = 0.5
+use_fixed_seed = true
+seed = 1902256886
+fixed_fps = 12
+process_material = SubResource("ParticleProcessMaterial_uniwh")
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
 position = Vector2(-1, -7)
 sprite_frames = SubResource("SpriteFrames_x7p2l")
-animation = &"attack_1"
+animation = &"jump_attack"
 autoplay = "idle"
-frame = 4
-frame_progress = 0.054467607
+frame = 3
+frame_progress = 1.0
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="AnimatedSprite2D"]
+unique_name_in_owner = true
 visible = false
 modulate = Color(0.82546747, 0.39672193, 0, 1)
-position = Vector2(-1, -7)
 texture = ExtResource("5_myrg7")
 vframes = 7
 frame = 1
@@ -911,6 +1004,7 @@ script = ExtResource("15_fcs02")
 
 [node name="AttackArea" type="Area2D" parent="."]
 unique_name_in_owner = true
+position = Vector2(2, 0)
 collision_layer = 0
 collision_mask = 16
 script = ExtResource("20_8ydkj")
@@ -918,9 +1012,11 @@ script = ExtResource("20_8ydkj")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
 position = Vector2(15.75, 3)
 shape = SubResource("RectangleShape2D_lgqa7")
+disabled = true
 debug_color = Color(0.9529412, 0, 0.06666667, 0.41960785)
 
 [node name="DamageArea" type="Area2D" parent="."]
+position = Vector2(-6, 0)
 script = ExtResource("23_ioxgp")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageArea"]
